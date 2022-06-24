@@ -1,6 +1,7 @@
 import React from 'react'; // -> equivalence in common JS : const React = require('react');
 import logo from './logo.svg';
 import './style.css';
+ 
 
 // Create a React component
 // -> a React component must always return JSX
