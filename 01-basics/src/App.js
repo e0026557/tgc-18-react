@@ -10,10 +10,10 @@ import './style.css';
 function App() {
   return (
     <React.Fragment>
-      <h1 style={{color:"green", backgroundColor: "yellow"}}>Hello world</h1> 
-      <p>hello there</p>
+      <h1 style={{color:"green", backgroundColor: "pink"}}>Hello world</h1> 
+      <p className='urgent'>hello there</p>
       <img src={logo} />
-      <img src={require('./image.jpg').default} />
+      <img src={require('./image.jpg')} />
     </React.Fragment>
   )
 }
