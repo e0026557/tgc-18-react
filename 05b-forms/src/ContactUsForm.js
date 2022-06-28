@@ -15,6 +15,17 @@ export default class ContactUsForm extends React.Component {
 
   // Methods
   // -> IMPORTANT: Make sure that event handlers (ie. functions that are called in response to an event happening) are ARROW FUNCTIONS
+
+  updateFormField = (event) => {
+    let stateVariable = event.target.name; // event.target.name is the name attribute of the element that the event happened on
+
+    // IMPORTANT: Take note that the [] wrapping the stateVariable is because we want to use the value of the variable to be the key of the state object
+    this.setState({
+      [stateVariable]: event.target.value
+    })
+  }
+
+
   updateFirstName = (event) => {
     this.setState({
       // event.target => element that the event happens on
@@ -64,6 +75,7 @@ export default class ContactUsForm extends React.Component {
           <label>First name:</label>
           <input
             type="text"
+            name="firstName"
             className="form-control"
             value={this.state.firstName}
             onChange={this.updateFirstName}
@@ -74,6 +86,7 @@ export default class ContactUsForm extends React.Component {
           <label>Last name:</label>
           <input
             type="text"
+            name="lastName"
             className="form-control"
             value={this.state.lastName}
             onChange={this.updateLastName}
@@ -118,6 +131,7 @@ export default class ContactUsForm extends React.Component {
           <label>Country of Origin:</label>
 
           <select
+            name="country"
             className="form-select"
             value={this.state.country}
             onChange={this.updateCountry}

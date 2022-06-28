@@ -11,10 +11,22 @@ export default class ContactUsForm extends React.Component {
     lastName: "",
     enquiryType: "",
     country: "singapore",
+    fruits: []
   };
 
   // Methods
   // -> IMPORTANT: Make sure that event handlers (ie. functions that are called in response to an event happening) are ARROW FUNCTIONS
+
+  updateFormField = (event) => {
+    let stateVariable = event.target.name; // event.target.name is the name attribute of the element that the event happened on
+
+    // IMPORTANT: Take note that the [] wrapping the stateVariable is because we want to use the value of the variable to be the key of the state object
+    this.setState({
+      [stateVariable]: event.target.value
+    })
+  }
+
+
   updateFirstName = (event) => {
     this.setState({
       // event.target => element that the event happens on
@@ -41,6 +53,77 @@ export default class ContactUsForm extends React.Component {
     });
   };
 
+
+  // NOTE: Handling arrays in state variables are tricky
+  // React community believes in values that should be immutable
+  updateFruits = (event) => {
+    // Check if the value is already in the array (ie. check if the checkbox is already checked)
+    // -> remove if the value is already in the array
+    if (this.state.fruits.includes(event.target.value)) {
+      // uncheck the checkbox
+
+      // 1. Clone the array
+      let clonedArr = this.state.fruits.slice();
+
+      // 2. Get the index of element to remove
+      let indexToRemove = -1;
+      for (let i=0; i< this.state.fruits.length; i++) {
+        if (this.state.fruits[i] === event.target.value) {
+          indexToRemove = i;
+          break;
+        }
+      }
+
+      // 3. Remove the element
+      clonedArr.splice(indexToRemove, 1);
+
+      // 4. Update the state variable
+      this.setState({
+        fruits: clonedArr
+      });
+
+    }
+
+    else {
+      // Steps to handle array
+      // -> Same for both adding and removing from array
+      // 1. Clone the original array
+      // 2. Update the cloned array
+      // 3. Set the cloned array back into the state
+      let clonedArr = this.state.fruits.slice();
+      clonedArr.push(event.target.value);
+      this.setState({
+        fruits: clonedArr
+      });
+
+    }
+  }
+
+  updateFruitsV2 = (event) => {
+    // Another method is using spread operator for arrays
+    if (this.state.fruits.includes(event.target.value)) {
+      // Removing from array
+      // 1. Get index of element to remove
+      let indexToRemove = this.state.fruits.indexOf(event.target.value);
+      let clonedArr = [
+        ...this.state.fruits.slice(0, indexToRemove),
+        ...this.state.fruits.slice(indexToRemove)
+      ]
+      this.setState({
+        fruits: clonedArr
+      })
+    }
+    else {
+      // Adding to array
+      let clonedArr = [...this.state.fruits, event.target.value];
+      this.setState({
+        fruits: clonedArr
+      });
+    }
+
+
+  }
+
   EnableSubmitButton = () => {
     let { firstName, lastName, enquiryType, country } = this.state;
 
@@ -64,6 +147,7 @@ export default class ContactUsForm extends React.Component {
           <label>First name:</label>
           <input
             type="text"
+            name="firstName"
             className="form-control"
             value={this.state.firstName}
             onChange={this.updateFirstName}
@@ -74,6 +158,7 @@ export default class ContactUsForm extends React.Component {
           <label>Last name:</label>
           <input
             type="text"
+            name="lastName"
             className="form-control"
             value={this.state.lastName}
             onChange={this.updateLastName}
@@ -118,6 +203,7 @@ export default class ContactUsForm extends React.Component {
           <label>Country of Origin:</label>
 
           <select
+            name="country"
             className="form-select"
             value={this.state.country}
             onChange={this.updateCountry}
@@ -127,6 +213,15 @@ export default class ContactUsForm extends React.Component {
             <option value="malaysia">Malaysia</option>
           </select>
         </div>
+
+        <div>
+          <label>Fruits:</label>
+          <input type="checkbox" name="fruits" value="apple" onChange={this.updateFruits}/>Apple
+          <input type="checkbox" name="fruits" value="orange" onChange={this.updateFruits}/>Orange
+          <input type="checkbox" name="fruits" value="pineapple" onChange={this.updateFruits}/>Pineapple
+          <input type="checkbox" name="fruits" value="durian" onChange={this.updateFruits}/>Durian
+        </div>
+
 
         <this.EnableSubmitButton />
       </div>
