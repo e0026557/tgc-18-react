@@ -25,33 +25,6 @@ export default class ContactUsForm extends React.Component {
     })
   }
 
-
-  updateFirstName = (event) => {
-    this.setState({
-      // event.target => element that the event happens on
-      // event.target.value => the content of the element
-      firstName: event.target.value,
-    });
-  };
-
-  updateLastName = (event) => {
-    this.setState({
-      lastName: event.target.value,
-    });
-  };
-
-  updateEnquiryType = (event) => {
-    this.setState({
-      enquiryType: event.target.value,
-    });
-  };
-
-  updateCountry = (event) => {
-    this.setState({
-      country: event.target.value,
-    });
-  };
-
   EnableSubmitButton = () => {
     let { firstName, lastName, enquiryType, country } = this.state;
 
@@ -78,7 +51,7 @@ export default class ContactUsForm extends React.Component {
             name="firstName"
             className="form-control"
             value={this.state.firstName}
-            onChange={this.updateFirstName}
+            onChange={this.updateFormField}
           />
         </div>
 
@@ -89,7 +62,7 @@ export default class ContactUsForm extends React.Component {
             name="lastName"
             className="form-control"
             value={this.state.lastName}
-            onChange={this.updateLastName}
+            onChange={this.updateFormField}
           />
         </div>
 
@@ -102,7 +75,7 @@ export default class ContactUsForm extends React.Component {
             value="support"
             className="form-check-input"
             checked={this.state.enquiryType === "support"}
-            onChange={this.updateEnquiryType}
+            onChange={this.updateFormField}
           />
           <label className="form-check-label">Support</label>
 
@@ -112,7 +85,7 @@ export default class ContactUsForm extends React.Component {
             value="sales"
             className="form-check-input"
             checked={this.state.enquiryType === "sales"}
-            onChange={this.updateEnquiryType}
+            onChange={this.updateFormField}
           />
           <label className="form-check-label">Sales</label>
 
@@ -122,7 +95,7 @@ export default class ContactUsForm extends React.Component {
             value="marketing"
             className="form-check-input"
             checked={this.state.enquiryType === "marketing"}
-            onChange={this.updateEnquiryType}
+            onChange={this.updateFormField}
           />
           <label className="form-check-label">Marketing</label>
         </div>
@@ -134,7 +107,7 @@ export default class ContactUsForm extends React.Component {
             name="country"
             className="form-select"
             value={this.state.country}
-            onChange={this.updateCountry}
+            onChange={this.updateFormField}
           >
             <option value="singapore">Singapore</option>
             <option value="thailand">Thailand</option>

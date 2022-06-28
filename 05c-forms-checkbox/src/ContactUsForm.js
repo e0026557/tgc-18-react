@@ -7,6 +7,7 @@ export default class ContactUsForm extends React.Component {
   // IMPORTANT: Ensure that there are no derived values
   // -> conditional rendering instead of storing as state variables
   state = {
+    hasSubmitted: false,
     firstName: "",
     lastName: "",
     enquiryType: "",
@@ -137,6 +138,40 @@ export default class ContactUsForm extends React.Component {
     );
   };
 
+
+  // VALIDATION
+  getNameError = () => {
+    if (this.state.firstName.length < 3) {
+      return 'The name must have 3 or more characters';
+    }
+    else if (this.state.firstName.length > 20) {
+      return 'The name must not exceed 20 characters';
+    }
+    else {
+      return null;
+    }
+  }
+
+  getEmailError = () => {
+    if (this.state.email.includes('@') === false) {
+      return 'The email is in the wrong format';
+    }
+    else {
+      return null;
+    }
+  }
+
+  submit = () => {
+    // Change state variable
+    this.setState({
+      hasSubmitted: true
+    });
+
+    if (!this.getNameError()) {
+      alert("All data is ok!");
+    }
+  }
+
   // IMPORTANT: Make sure not to call setState in the render function
   // -> derived values should go into render
   render() {
@@ -152,6 +187,7 @@ export default class ContactUsForm extends React.Component {
             value={this.state.firstName}
             onChange={this.updateFirstName}
           />
+          {this.getNameError() && this.state.hasSubmitted ? <span className="error">{this.getNameError()}</span> : '' }
         </div>
 
         <div className="mt-2">
@@ -223,7 +259,8 @@ export default class ContactUsForm extends React.Component {
         </div>
 
 
-        <this.EnableSubmitButton />
+        <button onClick={this.submit}>Submit</button>
+
       </div>
     );
   }
