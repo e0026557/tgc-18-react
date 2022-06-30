@@ -111,6 +111,15 @@ export default class TaskList extends React.Component {
 				>
 					Edit
 				</button>
+
+				<button
+					className='btn btn-danger btn-sm ms-3'
+					onClick={() => {
+						this.deleteTask(task);
+					}}
+				>
+					Delete
+				</button>
 			</li>
 		);
 	};
@@ -160,6 +169,22 @@ export default class TaskList extends React.Component {
 			taskBeingEdited: null // Remember to tell the state variable that we are done with editing and not editing the task anymore
 		});
 	};
+
+	deleteTask = (task) => {
+		// Get the index of the task to be deleted
+		let index = this.state.tasks.findIndex( t => t._id === task._id);
+
+		// Remove from the middle technique
+		const cloned = [
+			...this.state.tasks.slice(0, index),
+			...this.state.tasks.slice(index + 1)
+		];
+
+		// Update the state variable with the cloned array
+		this.setState({
+			tasks: cloned
+		})
+	}
 
 	render() {
 		return (
