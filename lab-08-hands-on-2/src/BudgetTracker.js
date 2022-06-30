@@ -177,6 +177,27 @@ export default class BudgetTracker extends React.Component {
 		);
 	};
 
+	displayDeleteExpense = (expense) => {
+		return (
+			<div className="container mt-3 border">
+				<p>
+					Are you sure you want to delete this expense?
+				</p>
+				<p>
+					({expense.description})
+				</p>
+				<button onClick={()=> {
+					this.deleteExpense(expense) 
+				}} className="btn btn-danger btn-sm me-2">Confirm Delete</button>
+				<button onClick={()=> {
+					this.setState({
+						expenseBeingDeleted: {}
+					})
+				}} className="btn btn-primary btn-sm">Cancel</button>
+			</div>
+		)
+	}
+
 	renderAddExpense = () => {
 		return (
 			<React.Fragment>
@@ -305,6 +326,24 @@ export default class BudgetTracker extends React.Component {
 				...this.state.expenses.slice(index + 1)
 			],
 			expenseBeingEdited: {}
+		});
+	}
+
+	deleteExpense = (expense) => {
+		// Get the index of expense to be deleted
+		const index = this.state.expenses.findIndex( e => e._id === expense._id );
+
+		if (index === -1) {
+			return;
+		}
+
+		// Update the array in state using the exclusion method
+		this.setState({
+			expenses: [
+				...this.state.expenses.slice(0, index),
+				...this.state.expenses.slice(index+1)
+			],
+			expenseBeingDeleted: {}
 		});
 	}
 
