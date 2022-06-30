@@ -79,6 +79,12 @@ export default class BudgetTracker extends React.Component {
 							}}
 						/>
 					</li>
+					<li>
+						<button className='btn btn-sm btn-primary'>Edit</button>
+						<button className='btn btn-sm btn-danger'>
+							Delete
+						</button>
+					</li>
 				</ul>
 			</div>
 		);
