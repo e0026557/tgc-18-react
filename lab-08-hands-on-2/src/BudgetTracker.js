@@ -71,50 +71,31 @@ export default class BudgetTracker extends React.Component {
 	displayExpense = (expense) => {
 		return (
 			<div className='container mt-3 border'>
-				<ul>
-					<li>Date: {expense.date}</li>
-					<li>Description: {expense.description}</li>
-					<li>Category: {expense.category}</li>
-					<li>Amount: ${expense.amount}</li>
-					<li>
-						<label
-							htmlFor={expense._id}
-							className='form-check-label'
-						>
-							Reconciled?
-						</label>
-						<input
-							type='checkbox'
-							name='reconciled'
-							id={expense._id}
-							className='form-check-input ms-1'
-							checked={expense.reconciled}
-							onChange={() => {
-								this.updateCheckbox(expense);
-							}}
-						/>
-					</li>
-					<li>
-						<button
-							className='btn btn-sm btn-primary'
-							onClick={() => {
-								this.beginEditExpense(expense);
-							}}
-						>
-							Edit
-						</button>
-						<button
-							className='btn btn-sm btn-danger'
-							onClick={() => {
-								this.setState({
-									expenseBeingDeleted: expense
-								});
-							}}
-						>
-							Delete
-						</button>
-					</li>
-				</ul>
+				<div className='mt-2'>Date: {expense.date}</div>
+				<div className='mt-2'>Description: {expense.description}</div>
+				<div className='mt-2'>Category: {expense.category}</div>
+				<div className='mt-2'>Amount: ${expense.amount}</div>
+				<div className='mt-2'>Reconciled: {expense.reconciled ? "true" : "false"}</div>
+				<div className='mt-2'>
+					<button
+						className='btn btn-sm btn-primary me-2'
+						onClick={() => {
+							this.beginEditExpense(expense);
+						}}
+					>
+						Edit
+					</button>
+					<button
+						className='btn btn-sm btn-danger'
+						onClick={() => {
+							this.setState({
+								expenseBeingDeleted: expense
+							});
+						}}
+					>
+						Delete
+					</button>
+				</div>
 			</div>
 		);
 	};
@@ -122,77 +103,76 @@ export default class BudgetTracker extends React.Component {
 	displayEditExpense = (expense) => {
 		return (
 			<div className='container mt-3 border'>
-				<ul>
-					<li>
-						<label>Date:</label>
-						<input
-							type='text'
-							name='modifiedExpenseDate'
-							value={this.state.modifiedExpenseDate}
-							onChange={this.updateFormField}
-						/>
-					</li>
-					<li>
-						<label>Description:</label>
-						<input
-							type='text'
-							name='modifiedExpenseDescription'
-							value={this.state.modifiedExpenseDescription}
-							onChange={this.updateFormField}
-						/>
-					</li>
-					<li>
-						<label>Category:</label>
-						<select
-							name='modifiedExpenseCategory'
-							className='form-select'
-							value={this.state.modifiedExpenseCategory}
-							onChange={this.updateFormField}
-						>
-							<option value='transport'>Transport</option>
-							<option value='entertainment'>Entertainment</option>
-							<option value='food'>Food</option>
-							<option value='bill'>Bill</option>
-							<option value='loan'>Loan</option>
-							<option value='others'>Others</option>
-						</select>
-					</li>
-					<li>
-						<label>Amount:</label>
-						<input
-							type='text'
-							name='modifiedExpenseAmount'
-							value={this.state.modifiedExpenseAmount}
-							onChange={this.updateFormField}
-						/>
-					</li>
-					<li>
-						<label
-							htmlFor={expense._id}
-							className='form-check-label'
-						>
-							Reconciled?
-						</label>
-						<input
-							type='checkbox'
-							name='reconciled'
-							id={expense._id}
-							className='form-check-input ms-1'
-							checked={modifiedExpenseReconciled}
-							onChange={() => {
-								this.updateCheckbox(expense);
-							}}
-						/>
-					</li>
-					<li>
-						<button
-							className='btn btn-sm btn-primary'
-							onClick={this.updateExpense}
-						>
-							Update
-						</button>
-					</li>
-				</ul>
+				<div className="mt-2">
+					<label>Date:</label>
+					<input
+						className="form-control"
+						type='text'
+						name='modifiedExpenseDate'
+						value={this.state.modifiedExpenseDate}
+						onChange={this.updateFormField}
+					/>
+				</div>
+				<div className="mt-2">
+					<label>Description:</label>
+					<input
+						className="form-control"
+						type='text'
+						name='modifiedExpenseDescription'
+						value={this.state.modifiedExpenseDescription}
+						onChange={this.updateFormField}
+					/>
+				</div>
+				<div className="mt-2">
+					<label>Category:</label>
+					<select
+						name='modifiedExpenseCategory'
+						className='form-select'
+						value={this.state.modifiedExpenseCategory}
+						onChange={this.updateFormField}
+					>
+						<option value='transport'>Transport</option>
+						<option value='entertainment'>Entertainment</option>
+						<option value='food'>Food</option>
+						<option value='bill'>Bill</option>
+						<option value='loan'>Loan</option>
+						<option value='others'>Others</option>
+					</select>
+				</div>
+				<div className="mt-2">
+					<label>Amount:</label>
+					<input
+						className="form-control"
+						type='text'
+						name='modifiedExpenseAmount'
+						value={this.state.modifiedExpenseAmount}
+						onChange={this.updateFormField}
+					/>
+				</div>
+				<div className="mt-2">
+					<label
+						htmlFor={expense._id}
+						className='form-check-label'
+					>
+						Reconciled?
+					</label>
+					<input
+						type='checkbox'
+						name='modifiedExpenseReconciled'
+						id={expense._id}
+						className='form-check-input ms-1'
+						checked={this.state.modifiedExpenseReconciled}
+						onChange={this.updateFormField}
+					/>
+				</div>
+				<div className="mt-2">
+					<button
+						className='btn btn-sm btn-primary'
+						onClick={this.updateExpense}
+					>
+						Update
+					</button>
+				</div>
 			</div>
 		);
 	};
@@ -275,29 +255,6 @@ export default class BudgetTracker extends React.Component {
 		);
 	};
 
-	updateCheckbox = (expense) => {
-		// Create a copy of the expense object and overwrite the reconciled key with the new boolean value
-		const expenseCopy = {
-			...expense,
-			reconciled: !expense.reconciled
-		};
-
-		// Find the index of the expense object
-		// Note: use findIndex since it is an array of objects (elements are not primitive data types)
-		const index = this.state.expenses.findIndex(
-			(expense) => expense._id === expenseCopy._id
-		);
-
-		// Replace the object with the copied object in the array (via substitution)
-		this.setState({
-			expenses: [
-				...this.state.expenses.slice(0, index),
-				expenseCopy,
-				...this.state.expenses.slice(index + 1)
-			]
-		});
-	};
-
 	addExpense = () => {
 		// Get new expense
 		let newExpense = {
@@ -325,6 +282,31 @@ export default class BudgetTracker extends React.Component {
 			modifiedExpenseReconciled: expense.reconciled
 		});
 	};
+
+	updateExpense = () => {
+		// Clone expense to be modified and overwrite the keys with the modified values 
+		const modifiedExpense = {
+			...this.state.expenseBeingEdited,
+			date: this.state.modifiedExpenseDate,
+			description: this.state.modifiedExpenseDescription,
+			category: this.state.modifiedExpenseCategory,
+			amount: this.state.modifiedExpenseAmount,
+			reconciled: this.state.modifiedExpenseReconciled
+		};
+
+		// Find the index of the expense to be modified
+		const index = this.state.expenses.findIndex(expense => expense._id === modifiedExpense._id);
+
+		// Update the array in state via substitution method
+		this.setState({
+			expenses: [
+				...this.state.expenses.slice(0, index),
+				modifiedExpense,
+				...this.state.expenses.slice(index + 1)
+			],
+			expenseBeingEdited: {}
+		});
+	}
 
 	// EVENT HANDLERS
 	updateFormField = (event) => {
