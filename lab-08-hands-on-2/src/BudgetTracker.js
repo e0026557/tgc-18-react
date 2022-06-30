@@ -29,11 +29,17 @@ export default class BudgetTracker extends React.Component {
 			}
 		],
 		expenseBeingEdited: {},
+		expenseBeingDeleted: {},
 		newExpenseDate: '',
 		newExpenseDescription: '',
 		newExpenseCategory: 'transport',
 		newExpenseAmount: 0,
-		newExpenseReconciled: false
+		newExpenseReconciled: false,
+		modifiedExpenseDate: '',
+		modifiedExpenseDescription: '',
+		modifiedExpenseCategory: 'transport',
+		modifiedExpenseAmount: 0,
+		modifiedExpenseReconciled: false
 	};
 
 	// Functions
@@ -43,10 +49,19 @@ export default class BudgetTracker extends React.Component {
 			return (
 				// Render an instance of expense
 				<React.Fragment key={expense._id}>
-					{/* Check if the expense is being edit or not */}
-					{this.state.expenseBeingEdited._id !== expense._id
-						? this.displayExpense(expense)
-						: this.displayEditExpense(expense)}
+					{/* Check if the expense is being edited or deleted or none */}
+					{/* Note: This is a self-calling arrow function to implement an if-else statement */}
+					{(() => {
+						if (this.state.expenseBeingEdited._id === expense._id) {
+							return this.displayEditExpense(expense);
+						} else if (
+							this.state.expenseBeingDeleted._id === expense._id
+						) {
+							return this.displayDeleteExpense(expense);
+						} else {
+							return this.displayExpense(expense);
+						}
+					})()}
 				</React.Fragment>
 			);
 		});
@@ -80,9 +95,101 @@ export default class BudgetTracker extends React.Component {
 						/>
 					</li>
 					<li>
-						<button className='btn btn-sm btn-primary'>Edit</button>
-						<button className='btn btn-sm btn-danger'>
+						<button
+							className='btn btn-sm btn-primary'
+							onClick={() => {
+								this.beginEditExpense(expense);
+							}}
+						>
+							Edit
+						</button>
+						<button
+							className='btn btn-sm btn-danger'
+							onClick={() => {
+								this.setState({
+									expenseBeingDeleted: expense
+								});
+							}}
+						>
 							Delete
+						</button>
+					</li>
+				</ul>
+			</div>
+		);
+	};
+
+	displayEditExpense = (expense) => {
+		return (
+			<div className='container mt-3 border'>
+				<ul>
+					<li>
+						<label>Date:</label>
+						<input
+							type='text'
+							name='modifiedExpenseDate'
+							value={this.state.modifiedExpenseDate}
+							onChange={this.updateFormField}
+						/>
+					</li>
+					<li>
+						<label>Description:</label>
+						<input
+							type='text'
+							name='modifiedExpenseDescription'
+							value={this.state.modifiedExpenseDescription}
+							onChange={this.updateFormField}
+						/>
+					</li>
+					<li>
+						<label>Category:</label>
+						<select
+							name='modifiedExpenseCategory'
+							className='form-select'
+							value={this.state.modifiedExpenseCategory}
+							onChange={this.updateFormField}
+						>
+							<option value='transport'>Transport</option>
+							<option value='entertainment'>Entertainment</option>
+							<option value='food'>Food</option>
+							<option value='bill'>Bill</option>
+							<option value='loan'>Loan</option>
+							<option value='others'>Others</option>
+						</select>
+					</li>
+					<li>
+						<label>Amount:</label>
+						<input
+							type='text'
+							name='modifiedExpenseAmount'
+							value={this.state.modifiedExpenseAmount}
+							onChange={this.updateFormField}
+						/>
+					</li>
+					<li>
+						<label
+							htmlFor={expense._id}
+							className='form-check-label'
+						>
+							Reconciled?
+						</label>
+						<input
+							type='checkbox'
+							name='reconciled'
+							id={expense._id}
+							className='form-check-input ms-1'
+							checked={modifiedExpenseReconciled}
+							onChange={() => {
+								this.updateCheckbox(expense);
+							}}
+						/>
+					</li>
+					<li>
+						<button
+							className='btn btn-sm btn-primary'
+							onClick={this.updateExpense}
+						>
+							Update
 						</button>
 					</li>
 				</ul>
@@ -168,19 +275,6 @@ export default class BudgetTracker extends React.Component {
 		);
 	};
 
-	// EVENT HANDLERS
-	updateFormField = (event) => {
-		if (event.target.type !== 'checkbox') {
-			this.setState({
-				[event.target.name]: event.target.value
-			});
-		} else {
-			this.setState({
-				[event.target.name]: event.target.checked
-			});
-		}
-	};
-
 	updateCheckbox = (expense) => {
 		// Create a copy of the expense object and overwrite the reconciled key with the new boolean value
 		const expenseCopy = {
@@ -219,6 +313,30 @@ export default class BudgetTracker extends React.Component {
 		this.setState({
 			expenses: [...this.state.expenses, newExpense]
 		});
+	};
+
+	beginEditExpense = (expense) => {
+		this.setState({
+			expenseBeingEdited: expense,
+			modifiedExpenseDate: expense.date,
+			modifiedExpenseDescription: expense.description,
+			modifiedExpenseCategory: expense.category,
+			modifiedExpenseAmount: expense.amount,
+			modifiedExpenseReconciled: expense.reconciled
+		});
+	};
+
+	// EVENT HANDLERS
+	updateFormField = (event) => {
+		if (event.target.type !== 'checkbox') {
+			this.setState({
+				[event.target.name]: event.target.value
+			});
+		} else {
+			this.setState({
+				[event.target.name]: event.target.checked
+			});
+		}
 	};
 
 	render() {
