@@ -28,7 +28,12 @@ export default class BudgetTracker extends React.Component {
 				reconciled: false
 			}
 		],
-		expenseBeingEdited: {}
+		expenseBeingEdited: {},
+		newExpenseDate: '',
+		newExpenseDescription: '',
+		newExpenseCategory: 'transport',
+		newExpenseAmount: 0,
+		newExpenseReconciled: false
 	};
 
 	// Functions
@@ -79,7 +84,97 @@ export default class BudgetTracker extends React.Component {
 		);
 	};
 
+	renderAddExpense = () => {
+		return (
+			<React.Fragment>
+				<div className='container mt-3'>
+					<h3>Add new expense</h3>
+
+					<div className='mt-2'>
+						<label className='form-label'>Date:</label>
+						<input
+							type='text'
+							name='newExpenseDate'
+							className='form-control'
+							value={this.state.newExpenseDate}
+							onChange={this.updateFormField}
+						/>
+					</div>
+
+					<div className='mt-2'>
+						<label className='form-label'>Description:</label>
+						<input
+							type='text'
+							name='newExpenseDescription'
+							className='form-control'
+							value={this.newExpenseDescription}
+							onChange={this.updateFormField}
+						/>
+					</div>
+
+					<div className='mt-2'>
+						<label className='form-label'>Category:</label>
+						<select
+							name='newExpenseCategory'
+							className='form-select'
+							value={this.state.newExpenseCategory}
+							onChange={this.updateFormField}
+						>
+							<option value='transport'>Transport</option>
+							<option value='entertainment'>Entertainment</option>
+							<option value='food'>Food</option>
+							<option value='bill'>Bill</option>
+							<option value='loan'>Loan</option>
+							<option value='others'>Others</option>
+						</select>
+					</div>
+
+					<div className='mt-2'>
+						<label className='form-label'>Amount:</label>
+						<input
+							type='text'
+							name='newExpenseAmount'
+							className='form-control'
+							value={this.newExpenseAmount}
+							onChange={this.updateFormField}
+						/>
+					</div>
+
+					<div className='mt-2'>
+						<label className='form-check-label'>Reconciled?</label>
+						<input
+							type='checkbox'
+							name='newExpenseReconciled'
+							className='form-check-input ms-1'
+							checked={this.state.newExpenseReconciled}
+							onChange={this.updateFormField}
+						/>
+					</div>
+
+					<button
+						className='btn btn-primary mt-4'
+						onClick={this.addExpense}
+					>
+						Add expense
+					</button>
+				</div>
+			</React.Fragment>
+		);
+	};
+
 	// EVENT HANDLERS
+	updateFormField = (event) => {
+		if (event.target.type !== 'checkbox') {
+			this.setState({
+				[event.target.name]: event.target.value
+			});
+		} else {
+			this.setState({
+				[event.target.name]: event.target.checked
+			});
+		}
+	};
+
 	updateCheckbox = (expense) => {
 		// Create a copy of the expense object and overwrite the reconciled key with the new boolean value
 		const expenseCopy = {
@@ -103,7 +198,29 @@ export default class BudgetTracker extends React.Component {
 		});
 	};
 
+	addExpense = () => {
+		// Get new expense
+		let newExpense = {
+			_id: Math.floor(Math.random() * 100000 + 1),
+			date: this.state.newExpenseDate,
+			description: this.state.newExpenseDescription,
+			category: this.state.newExpenseCategory,
+			amount: this.state.newExpenseAmount,
+			reconciled: this.state.newExpenseReconciled
+		};
+
+		// Update the array in state with a new copy
+		this.setState({
+			expenses: [...this.state.expenses, newExpense]
+		});
+	};
+
 	render() {
-		return <React.Fragment>{this.renderExpenses()}</React.Fragment>;
+		return (
+			<React.Fragment>
+				{this.renderExpenses()}
+				{this.renderAddExpense()}
+			</React.Fragment>
+		);
 	}
 }
