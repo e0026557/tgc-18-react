@@ -23,7 +23,7 @@ export default function Task(props) {
 				</button>
 				<button
 					className='btn btn-danger btn-sm mx-2'
-					onClick={() => props.delete(props.task)}
+					onClick={() => props.beginDelete(props.task)}
 				>
 					Delete
 				</button>

@@ -1,5 +1,6 @@
 import React from 'react';
 import AddNewTask from './components/AddNewTask';
+import DeleteTask from './components/DeleteTask';
 import EditTask from './components/EditTask';
 import Task from './components/Task';
 
@@ -26,7 +27,10 @@ export default class TaskList extends React.Component {
 		taskBeingEdited: {
 			_id: 0
 		},
-		modifiedTaskDescription: ''
+		modifiedTaskDescription: '',
+		taskBeingDeleted: {
+			_id: 0
+		}
 	};
 
 	updateFormField = (event) => {
@@ -96,25 +100,38 @@ export default class TaskList extends React.Component {
 
 		this.setState({
 			tasks: cloned,
-			taskBeingEdited: {}
+			taskBeingEdited: { _id: 0 }
 		});
 	};
 
-    delete = (task) => {
-        // Get the index of the task to be deleted
-        const index = this.state.tasks.findIndex(t => t._id === task._id);
+	delete = (task) => {
+		// Get the index of the task to be deleted
+		const index = this.state.tasks.findIndex((t) => t._id === task._id);
 
-        // Exclude the task to be deleted
-        // Note: spread operator has less priority than other functions
-        const modified = [
-            ...this.state.tasks.slice(0, index),
-            ...this.state.tasks.slice(index+1)
-        ];
+		// Exclude the task to be deleted
+		// Note: spread operator has less priority than other functions
+		const modified = [
+			...this.state.tasks.slice(0, index),
+			...this.state.tasks.slice(index + 1)
+		];
 
-        this.setState({
-            tasks: modified
-        });
-    }
+		this.setState({
+			tasks: modified,
+			taskBeingDeleted: { _id: 0 }
+		});
+	};
+
+	beginDelete = (task) => {
+		this.setState({
+			taskBeingDeleted: task
+		});
+	};
+
+	cancelDelete = () => {
+		this.setState({
+			taskBeingDeleted: { _id: 0 }
+		});
+	};
 
 	render() {
 		return (
@@ -122,17 +139,7 @@ export default class TaskList extends React.Component {
 				<h1>Task List</h1>
 				<ul className='list-group'>
 					{this.state.tasks.map((task) => {
-						if (this.state.taskBeingEdited._id !== task._id) {
-							return (
-								<Task
-									task={task}
-									key={task._id}
-									updateTaskDone={this.updateTaskDone}
-									beginEdit={this.beginEdit}
-                                    delete={this.delete}
-								/>
-							);
-						} else {
+						if (this.state.taskBeingEdited._id === task._id) {
 							return (
 								<EditTask
 									key={task._id}
@@ -141,6 +148,27 @@ export default class TaskList extends React.Component {
 									}
 									updateFormField={this.updateFormField}
 									processUpdate={this.processUpdate}
+								/>
+							);
+						} else if (
+							this.state.taskBeingDeleted._id === task._id
+						) {
+							return (
+								<DeleteTask
+									key={task._id}
+									task={task}
+									delete={this.delete}
+									cancelDelete={this.cancelDelete}
+								/>
+							);
+						} else {
+							return (
+								<Task
+									task={task}
+									key={task._id}
+									updateTaskDone={this.updateTaskDone}
+									beginEdit={this.beginEdit}
+									beginDelete={this.beginDelete}
 								/>
 							);
 						}
