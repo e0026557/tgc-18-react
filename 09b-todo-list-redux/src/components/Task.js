@@ -21,6 +21,12 @@ export default function Task(props) {
 				>
 					Edit
 				</button>
+				<button
+					className='btn btn-danger btn-sm mx-2'
+					onClick={() => props.delete(props.task)}
+				>
+					Delete
+				</button>
 			</li>
 		</React.Fragment>
 	);

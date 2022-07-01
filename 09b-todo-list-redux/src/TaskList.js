@@ -100,6 +100,22 @@ export default class TaskList extends React.Component {
 		});
 	};
 
+    delete = (task) => {
+        // Get the index of the task to be deleted
+        const index = this.state.tasks.findIndex(t => t._id === task._id);
+
+        // Exclude the task to be deleted
+        // Note: spread operator has less priority than other functions
+        const modified = [
+            ...this.state.tasks.slice(0, index),
+            ...this.state.tasks.slice(index+1)
+        ];
+
+        this.setState({
+            tasks: modified
+        });
+    }
+
 	render() {
 		return (
 			<React.Fragment>
@@ -113,6 +129,7 @@ export default class TaskList extends React.Component {
 									key={task._id}
 									updateTaskDone={this.updateTaskDone}
 									beginEdit={this.beginEdit}
+                                    delete={this.delete}
 								/>
 							);
 						} else {
