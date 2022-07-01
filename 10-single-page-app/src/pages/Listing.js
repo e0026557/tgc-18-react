@@ -11,7 +11,7 @@ export default function Listing(props) {
 						<h4>Ingredients</h4>
 						<ul>
 							{recipe.ingredients.map((ingredient) => (
-								<li>{ingredient}</li>
+								<li key={ingredient}>{ingredient}</li>
 							))}
 						</ul>
 					</div>
